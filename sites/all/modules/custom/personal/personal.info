@@ -1,0 +1,4 @@
+name = personal Example
+description = personal details.
+package = Example modules
+core = 7.x

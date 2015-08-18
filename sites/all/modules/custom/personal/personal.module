@@ -1,0 +1,47 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+
+function personal_menu() {
+  $items = array();
+  $items['personal'] = array(
+    'title' => 'Person Details',
+    'page callback' => 'get_information',
+    'access callback' => TRUE,
+    //'access arguments' => array('personal'),
+  );
+
+  return $items;
+}
+
+
+function get_information() {
+  
+ 
+  
+ $query = db_select('commerce_order', 'o');
+ $query->join('commerce_payment_transaction', 'p', 'o.order_id = p.order_id');
+ $query->join('commerce_line_item', 'l', 'l.order_id = o.order_id');
+ $query->join('field_data_commerce_total', 't', 'l.line_item_id = t.entity_id');
+ $query->condition('p.status', 'success');
+ $query->addExpression('COUNT( DISTINCT o.order_id )', 'count_order');
+ $query->addExpression('SUM( t.commerce_total_amount )/100', 'sum_amount');
+ $query->addExpression('SUM( l.quantity )', 'count_quantity');
+ $query->addExpression('COUNT( l.line_item_id )', 'count_line_item_id');
+
+ $row = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+ 
+ 
+  
+   $header = array('Count of all orders','Total amount', 'Total Quantity','Count of lined items'); 
+   $output = theme('table', array('header' => $header, 'rows' => $row));
+
+  return ($output);
+
+}
