@@ -22,8 +22,6 @@ function personal_menu() {
 
 
 function get_information() {
-  
-  
  $query = db_select('commerce_order', 'o');
  $query->join('commerce_payment_transaction', 'p', 'o.order_id = p.order_id');
  $query->join('commerce_line_item', 'l', 'l.order_id = o.order_id');
